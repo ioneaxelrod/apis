@@ -90,19 +90,40 @@ def create_eventbrite_event():
 
     # TODO: Create my event!
 
+    base_url = 'https://www.eventbriteapi.com/v3/events/'
+    # payload = {'event.name.html': name,
+    #            'event.start.utc': start_time,
+    #            'event.end.utc': end_time,
+    #            'event.currency': currency,
+    #            }
+    payload = {'event.name.html': "Happy Fun Adventure",
+               'event.start.utc': "2019-01-26T09:00:00Z",
+               'event.start.timezone': timezone,
+               'event.end.utc': "2019-01-27T09:00:00Z",
+               'event.end.timezone': timezone,
+               'event.currency': currency,
+               }
+    headers = {'Authorization': 'Bearer ' + os.environ['EVENTBRITE_TOKEN']}
+    response = requests.post(base_url, data=payload, headers=headers)
+    json = response.json()
+    url = json["url"]
+    flash(f"Your new event is here at {url}")
+
+
+
     # - Make a request to the Eventbrite API to create a new event using the
     # form data and save the result in a variable called `json`.
     # - Flash add the created event's URL as a link to the success flash message
 
     ##### UNCOMMENT THIS once you make your request! #####
-    # if response.ok:
-    #     flash("Your event was created!")
-    #     return redirect("/")
-    # else:
-    #     flash('OAuth failed: {}'.format(data['error_description']))
-    #     return redirect("/create-event")
+    if response.ok:
+        flash("Your event was created!")
+        return redirect("/")
+    else:
+        flash('OAuth failed: {}'.format(data['error_description']))
+        return redirect("/create-event")
 
-    return redirect("/")
+    # return redirect("/")
 
 
 ############ Further Study ############
